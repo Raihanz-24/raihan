@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raihan Car Rent</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+   .modal-active {
+  display: block;
+}
+.hidden {
+  display: none;
+}
+.error {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+
+
+    .error { color: red; font-size: 0.875rem; margin-top: 0.25rem; }
+      /* Animasi untuk card saat di-scroll */
+      .card {
+        opacity: 0; /* Card mulai dengan opacity 0 */
+        transform: translateY(20px); /* Card mulai dari posisi lebih bawah */
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Transisi animasi */
+      }
+      .card.visible {
+        opacity: 1; /* Card menjadi terlihat saat visible */
+        transform: translateY(0); /* Card kembali ke posisi semula */
+      }
+
+      .fade-in {
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+      }
+      .fade-in.visible {
+        opacity: 1;
+      }
+      .slide-up {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      .slide-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .carousel {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .carousel-inner {
+        display: flex;
+        transition: transform 0.5s ease;
+      }
+
+      .carousel-item {
+        min-width: 100%;
+        transition: opacity 0.5s ease;
+      }
+
+      .carousel-control {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 10;
+        border-radius: 50%;
+        font-size: 1.5rem;
+      }
+      .carousel-control.prev {
+        left: 10px;
+      }
+      .carousel-control.next {
+        right: 10px;
+      }
+
+      .no-hover-scale:hover {
+        transform: none; /* Disable scaling on hover */
+      }
+
+      .sidebar-button-hidden {
+        display: none;
+      }
+
+     
+    </style>
+  </head>
+  <body class="font-sans antialiased bg-gray-100 flex flex-col min-h-screen">
+    <!-- Sidebar -->
+    <div
+      id="sidebar"
+      class="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-20"
+    >
+      <div class="p-6 relative">
+        <h1 class="text-3xl font-semibold mb-8">Raihan Rent Car</h1>
+        <ul class="space-y-2">
+          <li>
+            <a
+              href="#section1"
+              class="block py-3 px-4 rounded-md hover:bg-gray-700 transition"
+              >Showroom</a
+            >
+          </li>
+          <li>
+            <a
+              href="#section2"
+              class="block py-3 px-4 rounded-md hover:bg-gray-700 transition"
+              >About Us</a
+            >
+          </li>
+          <li>
+            <a
+              href="#section3"
+              class="block py-3 px-4 rounded-md hover:bg-gray-700 transition"
+              >Daftar Mobil</a
+            >
+          </li>
+          <li>
+            <a
+              href="#section4"
+              class="block py-3 px-4 rounded-md hover:bg-gray-700 transition"
+              >Tambah Penyewa</a
+            >
+          </li>
+        </ul>
+        <!-- Tombol tutup sidebar -->
+        <button
+          id="close-button"
+          class="absolute top-4 right-4 p-2 bg-gray-800 text-white rounded-full shadow-md focus:outline-none md:hidden"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Button untuk menampilkan sidebar pada mobile -->
+    <button
+      id="menu-button"
+      class="fixed top-4 left-4 z-30 md:hidden p-3 bg-gray-800 text-white rounded-full shadow-md focus:outline-none"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        ></path>
+      </svg>
+    </button>
+
+    <!-- Main Content -->
+    <div class="flex flex-1 flex-col ml-0 md:ml-64">
+      <main class="flex-1 p-8 space-y-10 overflow-auto">
+        <!-- Section 1: Showroom -->
+        <section
+  id="section1"
+  class="w-full max-w-full mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 mx-auto sm:max-w-lg md:max-w-2xl lg:max-w-4xl"
+>
+          <h2 class="text-3xl font-semibold mb-6 text-gray-800">
+            Raihan Rent Car
+          </h2>
+          <!-- Carousel for images -->
+          <div class="relative carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img
+                  src="img/show2.jpeg"
+                  alt="Showroom 1"
+                  class="w-full h-auto rounded-lg shadow-md"
+                />
+              </div>
+              <div class="carousel-item">
+                <img
+                  src="img/show3.jpeg"
+                  alt="Showroom 2"
+                  class="w-full h-auto rounded-lg shadow-md"
+                />
+              </div>
+              <div class="carousel-item">
+                <img
+                  src="img/show4.jpeg"
+                  alt="Showroom 3"
+                  class="w-full h-auto rounded-lg shadow-md"
+                />
+              </div>
+            </div>
+            <button class="carousel-control prev" onclick="prevSlide()">
+              ❮
+            </button>
+            <button class="carousel-control next" onclick="nextSlide()">
+              ❯
+            </button>
+          </div>
+        </section>
+
+        <!-- Section 2: About Us -->
+        <section
+          id="section2"
+          class="w-full max-w-full mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 mx-auto sm:max-w-lg md:max-w-2xl lg:max-w-4xl"
+      
+        >
+          <h2 class="text-3xl font-semibold mb-6 text-gray-800">About Us</h2>
+          <p class="text-gray-700 mb-6">
+            Welcome to our showroom! We are committed to providing you with the
+            best selection of vehicles and exceptional service. Our team is
+            dedicated to helping you find the perfect car that meets your needs
+            and preferences.
+          </p>
+          <img
+            src=""
+            alt="About Us"
+            class="w-full h-auto rounded-lg shadow-md"
+          />
+        </section>
+        <!-- Section 3: Daftar Mobil -->
+<section id="section3" class="px-4 md:px-0">
+  <div class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800 md:text-3xl">Honda Mobilio RS</h2>
+    <div id="car-list" class="space-y-6">
+      <div>
+        <img src="img/mobilio.jpeg" alt="Car Image" class="w-full h-60 object-contain rounded-md mb-4 md:h-80" />
+        <h3 class="text-lg font-semibold mb-2 md:text-xl">Automatic</h3>
+        <p class="text-gray-700 mb-2">7 seater</p>
+        <p class="text-gray-700 mb-2">Harga Sewa: Rp300.000</p>
+      </div>
+      <button 
+      onclick="scrollToSection('section4')" 
+      class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+      rent now
+    </button>
+    </div>
+  </div>
+
+  <div  class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800 md:text-3xl">Toyota Innova Zenix</h2>
+    <div id="car-list" class="space-y-6">
+      <div>
+        <img src="img/zenix.jpeg" alt="Car Image" class="w-full h-48 object-contain rounded-md mb-4 md:h-64" />
+        <h3 class="text-lg font-semibold mb-2 md:text-xl">Automatic</h3>
+        <p class="text-gray-700 mb-2">7 seater</p>
+        <p class="text-gray-700 mb-2">Harga Sewa: Rp300.000</p>
+      </div>
+      <button 
+      onclick="scrollToSection('section4')" 
+      class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+      rent now
+    </button>
+    </div>
+  </div>
+
+  <div class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800 md:text-3xl">Mitsubishi Expander</h2>
+    <div id="car-list" class="space-y-6">
+      <div>
+        <img src="img/xpander.jpeg" alt="Car Image" class="w-full h-48 object-contain rounded-md mb-4 md:h-64" />
+        <h3 class="text-lg font-semibold mb-2 md:text-xl">Automatic</h3>
+        <p class="text-gray-700 mb-2">7 seater</p>
+        <p class="text-gray-700 mb-2">Harga Sewa: Rp300.000</p>
+      </div>
+      <button 
+      onclick="scrollToSection('section4')" 
+      class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+      rent now
+    </button>
+    </div>
+  </div>
+
+  <div class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800 md:text-3xl">Toyota Fortuner</h2>
+    <div id="car-list" class="space-y-6">
+      <div>
+        <img src="img/fortuner.jpeg" alt="Car Image" class="w-full h-48 object-contain rounded-md mb-4 md:h-64" />
+        <h3 class="text-lg font-semibold mb-2 md:text-xl">Automatic</h3>
+        <p class="text-gray-700 mb-2">7 seater</p>
+        <p class="text-gray-700 mb-2">Harga Sewa: Rp300.000</p>
+      </div>
+      <button 
+      onclick="scrollToSection('section4')" 
+      class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+      rent now
+    </button>
+    </div>
+  </div>
+
+  <div class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+    <h2 class="text-2xl font-semibold mb-4 text-gray-800 md:text-3xl">Toyota Voxy</h2>
+    <div id="car-list" class="space-y-6">
+      <div>
+        <img src="img/voxy.jpeg" alt="Car Image" class="w-full h-48 object-contain rounded-md mb-4 md:h-64" />
+        <h3 class="text-lg font-semibold mb-2 md:text-xl">Automatic</h3>
+        <p class="text-gray-700 mb-2">7 seater</p>
+        <p class="text-gray-700 mb-2">Harga Sewa: Rp600.000</p>
+      </div>
+      <button 
+      onclick="scrollToSection('section4')" 
+      class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+      rent now
+    </button>
+    </div>
+  </div>
+
+  
+</section>
+
+<section id="section4"
+class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+
+
+<div class="container mx-auto mt-8">
+  <h1 class="text-2xl font-bold mb-4">Daftar Penyewa</h1>
+  <div class="overflow-x-auto">
+      <table class="w-full bg-white shadow-md rounded-lg">
+          <thead>
+              <tr class="bg-gray-200">
+                  <th class="py-2 px-3">Nama</th>
+                  <th class="py-2 px-3">alamat</th>
+                  <th class="py-2 px-3">Telpon</th>
+                  <th class="py-2 px-3">NIK</th>
+                  <th class="py-2 px-3">Mobil</th>
+                  <th class="py-2 px-3">ambil</th>
+                  <th class="py-2 px-3">kembali</th>
+                  <th class="py-2 px-3">Aksi</th>
+              </tr>
+          </thead>
+          <tbody id="daftar-penyewa">
+              <!-- Data penyewa akan dimuat di sini -->
+          </tbody>
+      </table>
+  </div>
+</div>
+</section>
+
+<!-- Section 5: Form Tambah Penyewa -->
+<section id="section5" class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+  <div class="max-w-md mx-auto">
+    <h2 class="text-xl font-bold mb-1" id="formTitle">Form sewa</h2>
+    <p class="mb-4 ">silahkan  isi formulir untuk menyewa kendaraan kami</p>
+    <form id="penyewaForm">
+      <input type="hidden" id="editIndex">
+      <div class="mb-4">
+        <label class="block mb-1" for="nama">Nama</label>
+        <input class="w-full px-3 py-2 border rounded" type="text" id="nama" required>
+        <p class="error text-red-500" id="namaError"></p>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1" for="alamat">Alamat</label>
+        <input class="w-full px-3 py-2 border rounded" type="text" id="alamat" required>
+        <p class="error text-red-500" id="alamatError"></p>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1" for="noTelpon">No. Telpon</label>
+        <input class="w-full px-3 py-2 border rounded" type="text" id="noTelpon" required>
+        <p class="error text-red-500" id="noTelponError"></p>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1" for="noKTP">No. KTP</label>
+        <input class="w-full px-3 py-2 border rounded" type="text" id="noKTP" required>
+        <p class="error text-red-500" id="noKTPError"></p>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1 " for="mobil">Mobil yang Dipinjam</label>
+        <select class="w-full px-3 py-2 border rounded" id="mobil" required>
+          <option value="" disabled selected>Pilih mobil</option>
+          <option value="avanza">Honda Mobilio</option>
+          <option value="innova">Toyota Innova Zenix</option>
+          <option value="fortuner">Mitsubishi xpander</option>
+          <option value="hrv">Toyota Fortuner</option>
+          <option value="crv">Toyota Voxy</option>
+        </select>
+        <p class="error text-red-500" id="mobilError"></p>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1" for="tanggalPinjam">Tanggal Pinjam</label>
+        <input class="w-full px-3 py-2 border rounded" type="date" id="tanggalPinjam" required>
+        <p class="error text-red-500" id="tanggalPinjamError"></p>
+      </div>
+      <div class="mb-4">
+        <label class="block mb-1" for="lamaPinjam">Tanggal Pengembalian</label>
+        <input class="w-full px-3 py-2 border rounded" type="date" id="lamaPinjam" required>
+        <p class="error text-red-500" id="lamaPinjamError"></p>
+      </div>
+      <div class="flex justify-end">
+        <button type="button" id="cancelButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">Batal</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Simpan</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id="6"
+class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">Lokasi Saya</h1>
+    <div class="relative overflow-hidden rounded-lg shadow-lg" style="padding-top: 56.25%;">
+      <iframe
+        class="absolute top-0 left-0 w-full h-full border-0"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4877.3795763909075!2d113.53510661362623!3d-7.752569357057803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7038d7cce8229%3A0x438d3ccfb7d10e70!2sFOTOCOPY%20RAMAYANA!5e0!3m2!1sid!2sid!4v1722431738391!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen=""
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+
+
+</section>
+<section id="7" class="mb-4 bg-white shadow-lg rounded-lg p-6 slide-up transition-transform duration-300 ease-in-out transform hover:scale-105 max-w-lg mx-auto md:max-w-2xl lg:max-w-4xl">
+
+<!-- Footer -->
+<footer>
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row items-center justify-between">
+      <!-- Footer Text -->
+      <div class="text-center md:text-left mb-4 md:mb-0">
+        <p class="text-lg font-semibold">Raihan Rent car</p>
+        <p class="text-sm">© 2024 Raihan</p>
+      </div>
+
+      <!-- Social Media Links -->
+      <div class="flex space-x-4 mt-4 md:mt-0">
+        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.225 0H1.775C.796 0 0 .796 0 1.775v20.45C0 23.204.796 24 1.775 24h20.45c.979 0 1.775-.796 1.775-1.775V1.775C24 .796 23.204 0 22.225 0zM12 2.085c1.853 0 3.349 1.503 3.349 3.349 0 1.846-1.496 3.349-3.349 3.349-1.846 0-3.349-1.503-3.349-3.349 0-1.846 1.503-3.349 3.349-3.349zm-6.408 18.839V8.294c0-2.897 2.4-5.261 5.357-5.261 1.059 0 2.051.292 2.916.775-1.107.684-1.938 1.848-1.938 3.237v1.23h2.894l-.186 2.803h-2.708v6.837h-3.498zm15.826-6.293v1.478c0 2.095-1.569 3.563-3.623 3.563-1.989 0-3.647-1.57-3.647-3.563v-1.478c0-1.994 1.658-3.563 3.647-3.563 2.034 0 3.623 1.569 3.623 3.563z"/>
+          </svg>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.225 0H1.775C.796 0 0 .796 0 1.775v20.45C0 23.204.796 24 1.775 24h20.45c.979 0 1.775-.796 1.775-1.775V1.775C24 .796 23.204 0 22.225 0zM16.8 8.26c-.57.254-1.183.424-1.84.501.662-.396 1.17-1.022 1.406-1.77-.618.366-1.294.632-2.018.773-.583-.623-1.415-1.012-2.335-1.012-1.76 0-3.185 1.434-3.185 3.203 0 .253.028.502.081.74-2.647-.133-5.005-1.365-6.57-3.236-.274.465-.43.996-.43 1.569 0 1.084.554 2.037 1.39 2.596-.51-.016-.992-.156-1.409-.393v.04c0 1.513 1.078 2.772 2.51 3.059-.261.07-.54.108-.82.108-.201 0-.396-.02-.588-.057.396 1.232 1.543 2.126 2.904 2.152-1.065.833-2.408 1.331-3.868 1.331-.251 0-.496-.014-.743-.043 1.383.88 3.026 1.396 4.797 1.396 5.76 0 8.931-4.775 8.931-8.92 0-.136-.003-.272-.01-.408.615-.44 1.15-.98 1.573-1.605z"/>
+          </svg>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-1 17h-2v-6h2v6zm0-8h-2V7h2v4zm2 8h-2v-6h2v6zm0-8h-2V7h2v4z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+</section>
+
+
+<!-- Modal Notifikasi -->
+<div id="notificationModal" class="modal fixed z-10 inset-0 overflow-y-auto hidden">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+      <p id="notificationMessage" class="text-lg font-bold"></p>
+      <div class="flex justify-end mt-4">
+        <button id="closeNotificationButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div id="confirmDeleteModal" class="modal fixed z-10 inset-0 overflow-y-auto hidden">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+      <p class="text-lg font-bold">Apakah Anda yakin ingin menghapus data ini?</p>
+      <div class="flex justify-center mt-4">
+        <button id="confirmDeleteButton" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2">Hapus</button>
+        <button id="cancelDeleteButton" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
